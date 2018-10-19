@@ -2,10 +2,6 @@ package fargo
 
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
-import (
-	"github.com/op/go-logging"
-)
-
 type Logger interface {
 	Fatal(args ...interface{})
 	Fatalf(format string, args ...interface{})
@@ -29,6 +25,12 @@ var log, metadataLog, marshalLog Logger
 
 func SetLogger(l Logger) {
 	log = l
+	if metadataLog == nil {
+		metadataLog = l
+	}
+	if marshalLog == nil {
+		marshalLog = l
+	}
 }
 
 func SetMarshalLogger(l Logger) {
@@ -37,13 +39,4 @@ func SetMarshalLogger(l Logger) {
 
 func SetMetadataLogger(l Logger) {
 	marshalLog = l
-}
-
-func init() {
-	SetLogger(logging.MustGetLogger("fargo"))
-	SetMarshalLogger(logging.MustGetLogger("fargo.metadata"))
-	SetMetadataLogger(logging.MustGetLogger("fargo.marshal"))
-
-	logging.SetLevel(logging.WARNING, "fargo.metadata")
-	logging.SetLevel(logging.WARNING, "fargo.marshal")
 }
