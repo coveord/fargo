@@ -92,9 +92,10 @@ type Instance struct {
 	SecurePort        int  `xml:"-" json:"-"`
 	SecurePortEnabled bool `xml:"-" json:"-"`
 
-	HomePageUrl    string `xml:"homePageUrl" json:"homePageUrl"`
-	StatusPageUrl  string `xml:"statusPageUrl" json:"statusPageUrl"`
-	HealthCheckUrl string `xml:"healthCheckUrl" json:"healthCheckUrl"`
+	HomePageUrl          string `xml:"homePageUrl" json:"homePageUrl"`
+	StatusPageUrl        string `xml:"statusPageUrl" json:"statusPageUrl"`
+	HealthCheckUrl       string `xml:"healthCheckUrl" json:"healthCheckUrl"`
+	SecureHealthCheckUrl string `xml:"secureHealthCheckUrl" json:"secureHealthCheckUrl"`
 
 	CountryId      int64          `xml:"countryId" json:"countryId"`
 	DataCenterInfo DataCenterInfo `xml:"dataCenterInfo" json:"dataCenterInfo"`
