@@ -7,9 +7,7 @@ import (
 	"time"
 )
 
-// SelectServiceURL gets a eureka instance based on the connection's load
-// balancing scheme.
-// TODO: Make this not just pick a random one.
+// SelectServiceURL gets a eureka instance using a round robin algorithm
 func (e *EurekaConnection) SelectServiceURL() string {
 
 	if e.discoveryTtl == nil {
