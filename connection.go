@@ -3,43 +3,54 @@ package fargo
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
 import (
-	"math/rand"
 	"sync"
 	"time"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 // SelectServiceURL gets a eureka instance based on the connection's load
 // balancing scheme.
 // TODO: Make this not just pick a random one.
 func (e *EurekaConnection) SelectServiceURL() string {
+
 	if e.discoveryTtl == nil {
 		e.discoveryTtl = make(chan struct{}, 1)
 	}
-	if e.DNSDiscovery && len(e.discoveryTtl) == 0 {
-		servers, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
-		if err != nil {
-			return choice(e.ServiceUrls)
+
+	if e.shouldUseDNSDiscovery() {
+		if err := e.fillServiceURLSWithDNSDiscovery(); err != nil {
+			log.Fatal(err)
 		}
-		e.discoveryTtl <- struct{}{}
-		time.AfterFunc(ttl, func() {
-			// At the end of the timeout, empty the channel so that the next
-			// SelectServiceURL call will refresh the DNS info
-			<-e.discoveryTtl
-		})
-		e.ServiceUrls = servers
 	}
-	return choice(e.ServiceUrls)
+
+	if e.roundRobin == nil {
+		e.roundRobin = newRoundRobin(e.ServiceUrls)
+	}
+
+	return e.roundRobin.Next()
 }
 
-func choice(options []string) string {
-	if len(options) == 0 {
-		log.Fatal("There are no ServiceUrls to choose from, bailing out")
+func (e *EurekaConnection) shouldUseDNSDiscovery() bool {
+	return e.DNSDiscovery && len(e.discoveryTtl) == 0
+}
+
+func (e *EurekaConnection) fillServiceURLSWithDNSDiscovery() error {
+	servers, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
+	if err != nil {
+		return err
 	}
-	return options[rand.Int()%len(options)]
+	e.discoveryTtl <- struct{}{}
+	time.AfterFunc(ttl, func() {
+		// At the end of the timeout, empty the channel so that the next
+		// SelectServiceURL call will refresh the DNS info
+		<-e.discoveryTtl
+	})
+	e.ServiceUrls = servers
+
+	if e.roundRobin == nil || !e.roundRobin.Matches(e.ServiceUrls) {
+		e.roundRobin = newRoundRobin(e.ServiceUrls)
+	}
+
+	return nil
 }
 
 // NewConnFromConfigFile sets up a connection object based on a config in
