@@ -15,7 +15,7 @@ func (e *EurekaConnection) SelectServiceURL() string {
 	}
 
 	if e.shouldUseDNSDiscovery() {
-		if err := e.fillServiceURLSWithDNSDiscovery(); err != nil {
+		if err := e.refreshServiceUrls(); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -31,18 +31,18 @@ func (e *EurekaConnection) shouldUseDNSDiscovery() bool {
 	return e.DNSDiscovery && len(e.discoveryTtl) == 0
 }
 
-func (e *EurekaConnection) fillServiceURLSWithDNSDiscovery() error {
-	servers, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
+func (e *EurekaConnection) refreshServiceUrls() error {
+	serversUrls, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
 	if err != nil {
 		return err
 	}
+	e.ServiceUrls = serversUrls
 	e.discoveryTtl <- struct{}{}
 	time.AfterFunc(ttl, func() {
 		// At the end of the timeout, empty the channel so that the next
 		// SelectServiceURL call will refresh the DNS info
 		<-e.discoveryTtl
 	})
-	e.ServiceUrls = servers
 
 	if e.roundRobin == nil || !e.roundRobin.Matches(e.ServiceUrls) {
 		e.roundRobin = newRoundRobin(e.ServiceUrls)

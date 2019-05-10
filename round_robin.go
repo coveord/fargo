@@ -32,7 +32,7 @@ func (r *roundrobinImpl) Next() string {
 
 func (r *roundrobinImpl) Matches(other []string) bool {
 
-	if (other == nil) != (r.urls == nil) {
+	if (other == nil) || (r.urls == nil) {
 		return false
 	}
 
