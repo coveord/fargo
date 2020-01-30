@@ -8,7 +8,7 @@ require (
 	github.com/franela/goblin v0.0.0-20200105215937-c9ffbefa60db // indirect
 	github.com/franela/goreq v0.0.0-20140830203206-9df54ca75ad6
 	github.com/jtolds/gls v0.0.0-20150401064343-9a4a02dbe491 // indirect
-	github.com/miekg/dns v0.0.0-20141128204724-f01e44c2fdbf
+	github.com/miekg/dns v1.1.27
 	github.com/onsi/gomega v1.8.1 // indirect
 	github.com/smartystreets/assertions v0.0.0-20160707190355-2063fd1cc7c9 // indirect
 	github.com/smartystreets/goconvey v1.6.3-0.20160704134950-4622128e06c7
