@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hudl/fargo"
+	github.com/coveord/fargo"
 )
 
 func ExampleEurekaConnection_ScheduleVIPAddressUpdates_manual() {

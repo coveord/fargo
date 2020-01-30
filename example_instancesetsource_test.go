@@ -4,9 +4,8 @@ package fargo_test
 
 import (
 	"fmt"
+	"github.com/coveord/fargo"
 	"time"
-
-	"github.com/hudl/fargo"
 )
 
 func ExampleInstanceSetSource_Latest_outcomes() {
