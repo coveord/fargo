@@ -1,9 +1,9 @@
-FROM golang:1.6
+FROM golang:1.13
 
-ENV GOROOT=/usr/local/go
+WORKDIR /build
 
-RUN go get github.com/tools/godep
-RUN go get github.com/hudl/fargo
+COPY . ./
 
-WORKDIR /go/src/github.com/hudl/fargo/
-RUN godep restore
+ENV GO111MODULE=on
+
+RUN go build *.go
