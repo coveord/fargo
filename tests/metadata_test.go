@@ -4,7 +4,7 @@ package fargo_test
 
 import (
 	"encoding/xml"
-	"github.com/hudl/fargo"
+	"github.com/coveord/fargo"
 	. "github.com/smartystreets/goconvey/convey"
 	"strconv"
 	"testing"

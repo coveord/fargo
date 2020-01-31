@@ -3,7 +3,7 @@ package fargo_test
 // MIT Licensed (see README.md) - Copyright (c) 2013 Hudl <@Hudl>
 
 import (
-	"github.com/hudl/fargo"
+	github.com/coveord/fargo"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 )
