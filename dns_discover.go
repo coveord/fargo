@@ -20,7 +20,8 @@ func discoverDNS(domain string, port int, urlBase string, clientRegion string) (
 	if clientRegion != "" {
 		r = clientRegion
 	} else {
-		r, _ := region()
+		regionResolvedAutomatically, _ := region()
+		r = regionResolvedAutomatically
 	}
 
 	// all DNS queries must use the FQDN
