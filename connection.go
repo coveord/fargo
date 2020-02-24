@@ -32,7 +32,7 @@ func (e *EurekaConnection) shouldUseDNSDiscovery() bool {
 }
 
 func (e *EurekaConnection) refreshServiceUrls() error {
-	serversUrls, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase)
+	serversUrls, ttl, err := discoverDNS(e.DiscoveryZone, e.ServicePort, e.ServerURLBase, e.ClientRegion)
 	if err != nil {
 		return err
 	}
@@ -70,6 +70,7 @@ func NewConnFromConfig(conf Config) (c EurekaConnection) {
 	if len(c.ServiceUrls) == 0 && len(conf.Eureka.ServerDNSName) > 0 {
 		c.ServiceUrls = []string{conf.Eureka.ServerDNSName}
 	}
+	c.ClientRegion = conf.Client.Region
 	c.Timeout = time.Duration(conf.Eureka.ConnectTimeoutSeconds) * time.Second
 	c.PollInterval = time.Duration(conf.Eureka.PollIntervalSeconds) * time.Second
 	c.PreferSameZone = conf.Eureka.PreferSameZone

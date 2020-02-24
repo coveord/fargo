@@ -4,18 +4,24 @@ package fargo
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/cenkalti/backoff"
 	"github.com/franela/goreq"
 	"github.com/miekg/dns"
-	"time"
 )
 
 const azURL = "http://169.254.169.254/latest/meta-data/placement/availability-zone"
 
 var ErrNotInAWS = fmt.Errorf("Not in AWS")
 
-func discoverDNS(domain string, port int, urlBase string) (servers []string, ttl time.Duration, err error) {
-	r, _ := region()
+func discoverDNS(domain string, port int, urlBase string, clientRegion string) (servers []string, ttl time.Duration, err error) {
+	var r = string
+	if clientRegion != "" {
+		r = clientRegion
+	} else {
+		r = region()
+	}
 
 	// all DNS queries must use the FQDN
 	domain = "txt." + r + "." + dns.Fqdn(domain)

@@ -25,6 +25,7 @@ type EurekaConnection struct {
 	Retries        int
 	DNSDiscovery   bool
 	DiscoveryZone  string
+	ClientRegion   string
 	discoveryTtl   chan struct{}
 	roundRobin     roundRobin
 	UseJson        bool
