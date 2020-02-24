@@ -16,11 +16,11 @@ const azURL = "http://169.254.169.254/latest/meta-data/placement/availability-zo
 var ErrNotInAWS = fmt.Errorf("Not in AWS")
 
 func discoverDNS(domain string, port int, urlBase string, clientRegion string) (servers []string, ttl time.Duration, err error) {
-	var r = string
+	var r string
 	if clientRegion != "" {
 		r = clientRegion
 	} else {
-		r = region()
+		r, _ := region()
 	}
 
 	// all DNS queries must use the FQDN
